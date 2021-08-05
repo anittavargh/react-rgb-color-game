@@ -7,9 +7,8 @@ export default function ColorGame() {
   const [selectColor, setSelectColor] = useState();
   const [arrayOfColors, setarrayOfColors] = useState([]);
   const [gameMessage, setGameMessage] = useState("");
-  const [headingBg, setHeadingBg] = useState("steelblue")
-  const [buttonMessage, setButtonMessage] = useState("NEW COLORS")
-  const colors = [];
+  const [headingBg, setHeadingBg] = useState("steelblue");
+  const [buttonMessage, setButtonMessage] = useState("NEW COLORS");
 
   useEffect(() => {
     setUpSquares();
@@ -25,24 +24,18 @@ export default function ColorGame() {
   };
 
   const reset = () => {
-    setGameMessage("")
-    setButtonMessage("NEW COLORS")
+    setGameMessage("");
+    setButtonMessage("NEW COLORS");
     const colors = generateRandomColors();
     setarrayOfColors(colors);
-    console.log("length", arrayOfColors.length);
-    console.log("typeOf", typeof arrayOfColors);
-    console.log("colors", colors);
-    console.log(Object.values(colors));
-    console.log(typeof colors);
+
     const pickedColor = pickColor();
-    console.log("picked color", pickedColor);
-    console.log(colors[pickedColor]);
+
     setSelectColor(colors[pickedColor]);
   };
 
   const pickColor = () => {
     var random = Math.floor(Math.random() * numberOfSquares);
-    console.log("random", colors[random]);
     return random;
   };
 
@@ -68,32 +61,35 @@ export default function ColorGame() {
     return "rgb(" + r + ", " + g + ", " + b + ")";
   }
 
-  const checkColor = (element) => {
-      console.log("element",element)
-      if(element==selectColor){
-        console.log("correct")
-        setGameMessage("Correct!")
-        const sameColors = Object.keys(arrayOfColors).map((index)=> {
-          return selectColor
+  const checkColor = (element, index) => {
+    if (element == selectColor) {
+      setGameMessage("Correct!");
+      const sameColors = Object.keys(arrayOfColors).map((index) => {
+        return selectColor;
       });
-      console.log("same",sameColors)
-      setButtonMessage("PLAY AGAIN?")
-      setarrayOfColors(sameColors)  
-      setHeadingBg(selectColor)
-      }
-      else{
-        console.log("incorrect")
-        setGameMessage("Try Again ?")
-      }
-  }
+      setButtonMessage("PLAY AGAIN?");
+      setarrayOfColors(sameColors);
+      setHeadingBg(selectColor);
+    } else {
+      setGameMessage("Try Again ?");
+      const markWrongSelectedColor = Object.values(arrayOfColors).map(
+        (e, i) => {
+          if (i == index) {
+            return "rgb(" + 35 + ", " + 35 + ", " + 35 + ")";
+          } else {
+            return e;
+          }
+        }
+      );
+      setarrayOfColors(markWrongSelectedColor);
+    }
+  };
 
   return (
     <div className="body">
-      <div className="heading" style={{backgroundColor: `${headingBg}`}}>
+      <div className="heading" style={{ backgroundColor: `${headingBg}` }}>
         <h2>The GREAT </h2>
-        <h1>
-          {selectColor}
-        </h1>
+        <h1>{selectColor}</h1>
         <h2>Color Game</h2>
       </div>
 
@@ -124,7 +120,13 @@ export default function ColorGame() {
       <p></p>
       <div className="container">
         {Object.values(arrayOfColors).map((element, index) => {
-          return <button class="color-button" style={{ backgroundColor: `${element}` }} onClick={e=>checkColor(element)}></button>;
+          return (
+            <button
+              class="color-button"
+              style={{ backgroundColor: `${element}` }}
+              onClick={(e) => checkColor(element, index)}
+            ></button>
+          );
         })}
       </div>
     </div>
